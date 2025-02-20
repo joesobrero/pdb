@@ -1,8 +1,25 @@
 @import 'tailwindcss';
 
 @theme {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  /* Base colors */
+  --color-base-100: oklch(1 0 0);  /* Base/white */
+  --color-base-200: oklch(0.97 0.003 90);  /* Neutral/100 */
+  --color-base-300: oklch(0.93 0.005 90);  /* Neutral/200 */
+  --color-muted: oklch(0.5 0.003 90);  /* Neutral/500 */
+  --color-content: oklch(0 0 0);  /* Base/black */
+  --color-destructive: oklch(0.7 0.15 25);  /* Red/400 */
+}
+
+/* Dark mode overrides using CSS variables */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-base-100: oklch(0.1 0 0);  /* Neutral/900 */
+    --color-base-200: oklch(0.2 0.003 90);  /* Neutral/800 */
+    --color-base-300: oklch(0.3 0.005 90);  /* Neutral/700 */
+    --color-muted: oklch(0.6 0.003 90);  /* Neutral/400 */
+    --color-content: oklch(1 0 0);  /* Base/white */
+    --color-destructive: oklch(0.7 0.15 25);  /* Red/400 stays the same */
+  }
 }
 
 /*
@@ -14,29 +31,28 @@
   color utility to any element that depends on these defaults.
 */
 @layer base {
+  ::selection {
+    @apply bg-teal-400;
+    color: var(--color-base-100);
+  }
+  
   *,
   ::after,
   ::before,
   ::backdrop,
   ::file-selector-button {
-    border-color: var(--color-gray-200, currentColor);
+    border-color: var(--color-base-300, currentColor);
   }
 }
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer utilities {
+  .debug {
+    border: 1px solid var(--color-destructive);
   }
 }
 
 body {
-  color: var(--foreground);
-  background: var(--background);
+  color: var(--color-content);
+  background: var(--color-base-100);
   font-family: Arial, Helvetica, sans-serif;
 }
