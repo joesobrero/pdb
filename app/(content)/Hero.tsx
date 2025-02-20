@@ -4,6 +4,7 @@ import {
   faUserTie,
   faArrowRight,
 } from "@fortawesome/pro-regular-svg-icons";
+import Button from "../components/interactive/button";
 
 export default function Hero() {
   return (
@@ -25,13 +26,9 @@ export default function Hero() {
         &gt;&gt; customize ai-generated newsletters
       </p>
 
-      <a
-        href="#"
-        className="inline-flex w-fit items-center gap-3 px-6 py-3 text-content bg-base-200 hover:bg-base-300 rounded-full transition-colors"
-      >
+      <Button variant="outline" iconRight={faArrowRight}>
         Get started
-        <FontAwesomeIcon icon={faArrowRight} />
-      </a>
+      </Button>
     </div>
   );
 }
