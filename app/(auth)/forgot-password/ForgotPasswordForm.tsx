@@ -46,7 +46,7 @@ export default function ForgotPasswordForm() {
       )}
 
       {success ? (
-        <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded">
+        <div className="bg-green-400/10 border border-green-400/10 text-green-500 px-4 py-3 rounded-xl animate-fade-in">
           Check your email for the password reset link
         </div>
       ) : (
