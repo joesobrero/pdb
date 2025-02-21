@@ -8,42 +8,33 @@ import {
   faLock,
 } from "@fortawesome/pro-regular-svg-icons";
 import Button from "@/app/components/interactive/button";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
 
-export default function SignUpForm() {
+export default function SignInForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  const router = useRouter();
   const supabase = createClient();
 
-  const handleSignUp = async (e: React.FormEvent) => {
+  const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
 
-    if (password !== confirmPassword) {
-      setError("Passwords do not match");
-      setLoading(false);
-      return;
-    }
-
     try {
-      const { error } = await supabase.auth.signUp({
+      const { error } = await supabase.auth.signInWithPassword({
         email,
         password,
-        options: {
-          emailRedirectTo: `${window.location.origin}/auth/callback`,
-        },
       });
 
       if (error) throw error;
 
-      // Show success message or redirect
-      alert("Check your email for the confirmation link");
+      router.push("/dashboard");
     } catch (error) {
       setError(error instanceof Error ? error.message : "An error occurred");
     } finally {
@@ -53,8 +44,8 @@ export default function SignUpForm() {
 
   return (
     <form
-      onSubmit={handleSignUp}
-      className="space-y-3 min-h-72 flex-col flex justify-center"
+      onSubmit={handleSignIn}
+      className="space-y-3 min-h-72 flex-col flex justify-center animate-fade-in"
     >
       {error && (
         <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
@@ -91,40 +82,26 @@ export default function SignUpForm() {
         <button
           type="button"
           onClick={() => setShowPassword(!showPassword)}
-          className="absolute inset-y-0 right-4 flex items-center text-muted hover:text-content"
+          className="cursor-pointer absolute inset-y-0 right-4 flex items-center text-muted hover:text-content"
         >
           <FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye} />
         </button>
       </div>
 
-      <div className="relative">
-        <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none text-muted">
-          <FontAwesomeIcon icon={faLock} />
-        </div>
-        <input
-          type={showConfirmPassword ? "text" : "password"}
-          value={confirmPassword}
-          onChange={(e) => setConfirmPassword(e.target.value)}
-          placeholder="Confirm Password"
-          required
-          className="w-full pl-12 pr-12 py-3 bg-base-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-400"
-        />
-        <button
-          type="button"
-          onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-          className="absolute inset-y-0 right-4 flex items-center text-muted hover:text-content"
-        >
-          <FontAwesomeIcon icon={showConfirmPassword ? faEyeSlash : faEye} />
-        </button>
-      </div>
+      <Link
+        href="/forgot-password"
+        className="font-medium text-muted hover:text-content w-full text-right text-xs"
+      >
+        Forgot your password?
+      </Link>
 
       <Button
         type="submit"
-        disabled={loading}
         variant="primary"
-        className="w-full justify-center"
+        disabled={loading}
+        className="w-full justify-center mt-1.5"
       >
-        {loading ? "Signing up..." : "Sign Up"}
+        {loading ? "Signing in..." : "Sign In"}
       </Button>
     </form>
   );

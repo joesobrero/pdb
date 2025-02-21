@@ -8,7 +8,7 @@ import Button from "../components/interactive/button";
 
 export default function Hero() {
   return (
-    <div className="flex flex-col items-center text-center max-w-4xl mx-auto gap-6">
+    <div className="flex flex-col items-center text-center max-w-lg mx-auto gap-6">
       <h1 className="flex flex-wrap items-center justify-center gap-3 text-3xl font-display font-bold text-nowrap text-muted leading-3">
         <span>Get</span>
         <span className="text-content gap-3 flex items-center">
@@ -24,7 +24,7 @@ export default function Hero() {
 
       <p className="text-muted">&gt;&gt; customize ai-generated newsletters</p>
 
-      <Button variant="outline" iconRight={faArrowRight} href="/auth">
+      <Button variant="outline" iconRight={faArrowRight} href="/sign-up">
         Get started
       </Button>
     </div>
