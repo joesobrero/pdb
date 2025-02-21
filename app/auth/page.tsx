@@ -11,10 +11,10 @@ export default function AuthPage() {
     <div className="min-h-screen flex items-center justify-center bg-base-100 py-12 px-6 sm:px-12 lg:px-24">
       <div className="max-w-sm w-full space-y-3">
         <div className="space-y-1.5">
-          <h2 className="mt-6 text-center text-3xl font-bold font-mono">
+          <h2 className="mt-6 text-center text-3xl font-bold font-display">
             {mode === "signin" ? "Sign in" : "Sign up"}
           </h2>
-          <p className="text-muted text-center font-mono">
+          <p className="text-muted text-center">
             {mode === "signin"
               ? "Sign in to access your account"
               : "Create a new account to get started"}
