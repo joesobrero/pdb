@@ -26,7 +26,7 @@ export default function Hero() {
         &gt;&gt; customize ai-generated newsletters
       </p>
 
-      <Button variant="outline" iconRight={faArrowRight}>
+      <Button variant="outline" iconRight={faArrowRight} href="/auth">
         Get started
       </Button>
     </div>
