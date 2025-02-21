@@ -4,6 +4,7 @@ import localFont from "next/font/local";
 import "./globals.css";
 import "@fortawesome/fontawesome-svg-core/styles.css";
 import { config } from "@fortawesome/fontawesome-svg-core";
+import Header from "./components/navigation/header";
 
 config.autoAddCss = false;
 
@@ -66,7 +67,10 @@ export default function RootLayout({
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} ${valve.variable} antialiased`}
     >
-      <body>{children}</body>
+      <body>
+        <Header />
+        {children}
+      </body>
     </html>
   );
 }
