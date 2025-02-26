@@ -1,22 +1,21 @@
 "use client";
 
 import { cn } from "@/app/lib/utils";
-import Input from "@/app/components/interactive/Input";
+import Input from "@/app/components/interactive/input";
+import Select from "@/app/components/interactive/select";
 import {
   faUser,
   faCalendarDays,
   faCommentDots,
   faLink,
   faBan,
-  faChevronDown,
   faPlus,
-  faTimes,
   faTags,
-  faAnglesUpDown,
   faArrowsUpDown,
+  faUserGroup,
 } from "@fortawesome/pro-regular-svg-icons";
 import { useState, useEffect } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import Badge from "@/app/components/interactive/badge";
 
 const NewBriefPage = () => {
   // Basic brief info
@@ -28,21 +27,43 @@ const NewBriefPage = () => {
   // Customization options
   const [topics, setTopics] = useState<string[]>([]);
   const [newTopic, setNewTopic] = useState("");
-  const [length, setLength] = useState<string>("medium");
+  const [length, setLength] = useState<string>("concise");
   const [frequency, setFrequency] = useState<string>("weekly");
   const [tone, setTone] = useState<string>("professional");
-  const [sources, setSources] = useState<string[]>(["cnn.com"]);
+  const [sources, setSources] = useState<string[]>([]);
   const [newSource, setNewSource] = useState("");
   const [restrictedSources, setRestrictedSources] = useState<string[]>([]);
   const [newRestrictedSource, setNewRestrictedSource] = useState("");
   const [targetAudience, setTargetAudience] = useState("");
   const [brandGuidelines, setBrandGuidelines] = useState("");
 
-  // Advanced options toggle
-  const [showAdvanced, setShowAdvanced] = useState(false);
-
   // Template prompt
   const [templatePrompt, setTemplatePrompt] = useState("");
+
+  // Select options
+  const frequencyOptions = [
+    { value: "daily", label: "Daily" },
+    { value: "weekly", label: "Weekly" },
+    { value: "monthly", label: "Monthly" },
+    { value: "quarterly", label: "Quarterly" },
+    { value: "yearly", label: "Yearly" },
+  ];
+
+  const lengthOptions = [
+    { value: "concise", label: "Concise" },
+    { value: "high-level", label: "High-level" },
+    { value: "detailed", label: "Detailed" },
+    { value: "comprehensive", label: "Comprehensive" },
+    { value: "exhaustive", label: "Exhaustive" },
+  ];
+
+  const toneOptions = [
+    { value: "casual", label: "Casual" },
+    { value: "friendly", label: "Friendly" },
+    { value: "neutral", label: "Neutral" },
+    { value: "professional", label: "Professional" },
+    { value: "authoritative", label: "Authoritative" },
+  ];
 
   // Handle name validation
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -119,7 +140,7 @@ const NewBriefPage = () => {
       : "[brand guidelines or personality]";
     const toneText = `[${tone}]`;
     const frequencyText = `[${frequency}]`;
-    const lengthText = `[${length}/detail level]`;
+    const lengthText = `[${length}]`;
 
     // Format the prompt with highlighted variables - using a single line with explicit line breaks
     setTemplatePrompt(
@@ -145,7 +166,7 @@ const NewBriefPage = () => {
     <>
       <h1 className="text-3xl font-display font-bold">New brief</h1>
 
-      <div className="flex flex-row gap-18 mt-6">
+      <div className="flex flex-col md:flex-row gap-8">
         <div className="flex flex-col gap-2 w-96">
           <h6 className="font-medium">Settings</h6>
 
@@ -155,7 +176,6 @@ const NewBriefPage = () => {
             value={briefName}
             onChange={handleNameChange}
             placeholder="Name"
-            // leftIcon={faUser}
             isValid={isNameValid === true}
             isInvalid={isNameValid === false}
             errorMessage={
@@ -166,25 +186,12 @@ const NewBriefPage = () => {
           />
 
           {/* Frequency */}
-          <div className="relative">
-            <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none text-muted">
-              <FontAwesomeIcon icon={faCalendarDays} />
-            </div>
-            <select
-              value={frequency}
-              onChange={(e) => setFrequency(e.target.value)}
-              className="w-full pl-10 pr-10 py-3 bg-base-200 rounded-lg appearance-none focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-400 border"
-            >
-              <option value="daily">Daily</option>
-              <option value="weekly">Weekly</option>
-              <option value="biweekly">Bi-weekly</option>
-              <option value="monthly">Monthly</option>
-              <option value="quarterly">Quarterly</option>
-            </select>
-            <div className="absolute inset-y-0 right-4 flex items-center pointer-events-none text-muted">
-              <FontAwesomeIcon icon={faAnglesUpDown} />
-            </div>
-          </div>
+          <Select
+            value={frequency}
+            onChange={(e) => setFrequency(e.target.value)}
+            options={frequencyOptions}
+            leftIcon={faCalendarDays}
+          />
 
           {/* Target Audience */}
           <Input
@@ -192,7 +199,7 @@ const NewBriefPage = () => {
             value={targetAudience}
             onChange={(e) => setTargetAudience(e.target.value)}
             placeholder="Target audience"
-            leftIcon={faUser}
+            leftIcon={faUserGroup}
           />
 
           {/* Topics */}
@@ -207,165 +214,102 @@ const NewBriefPage = () => {
               rightIcon={faPlus}
               rightIconAction={addTopic}
               rightIconLabel="Add topic"
+              autoComplete="new-password"
             />
             {topics.length > 0 && (
               <div className="flex flex-wrap gap-2 mt-2">
                 {topics.map((topic, index) => (
-                  <div
+                  <Badge
                     key={index}
-                    className="flex items-center gap-1 bg-base-200 px-3 py-1 rounded-full"
-                  >
-                    <span>{topic}</span>
-                    <button
-                      onClick={() => removeTopic(topic)}
-                      className="text-muted hover:text-content transition-colors"
-                      aria-label={`Remove ${topic}`}
-                    >
-                      <FontAwesomeIcon icon={faTimes} size="sm" />
-                    </button>
-                  </div>
+                    label={topic}
+                    onRemove={() => removeTopic(topic)}
+                    variant="solid"
+                  />
                 ))}
               </div>
             )}
           </div>
 
           {/* Tone */}
-          <div className="relative">
-            <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none text-muted">
-              <FontAwesomeIcon icon={faCommentDots} />
-            </div>
-            <select
-              value={tone}
-              onChange={(e) => setTone(e.target.value)}
-              className="w-full pl-10 pr-10 py-3 bg-base-200 rounded-lg appearance-none focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-400 border"
-            >
-              <option value="professional">Professional</option>
-              <option value="casual">Casual</option>
-              <option value="formal">Formal</option>
-              <option value="conversational">Conversational</option>
-              <option value="authoritative">Authoritative</option>
-              <option value="technical">Technical</option>
-            </select>
-            <div className="absolute inset-y-0 right-4 flex items-center pointer-events-none text-muted">
-              <FontAwesomeIcon icon={faChevronDown} />
-            </div>
-          </div>
+          <Select
+            value={tone}
+            onChange={(e) => setTone(e.target.value)}
+            options={toneOptions}
+            leftIcon={faCommentDots}
+          />
 
           {/* Length */}
+          <Select
+            value={length}
+            onChange={(e) => setLength(e.target.value)}
+            options={lengthOptions}
+            leftIcon={faArrowsUpDown}
+          />
+
+          {/* Sources */}
           <div className="relative">
-            <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none text-muted">
-              <FontAwesomeIcon icon={faArrowsUpDown} />
-            </div>
-            <select
-              value={length}
-              onChange={(e) => setLength(e.target.value)}
-              className="w-full pl-10 pr-10 py-3 bg-base-200 rounded-lg appearance-none focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-400 border"
-            >
-              <option value="short">Short</option>
-              <option value="medium">Medium</option>
-              <option value="long">Long</option>
-              <option value="comprehensive">Comprehensive</option>
-            </select>
-            <div className="absolute inset-y-0 right-4 flex items-center pointer-events-none text-muted">
-              <FontAwesomeIcon icon={faAnglesUpDown} />
-            </div>
+            <Input
+              type="text"
+              value={newSource}
+              onChange={(e) => setNewSource(e.target.value)}
+              placeholder="Sources"
+              leftIcon={faLink}
+              onKeyDown={(e) => e.key === "Enter" && addSource()}
+              rightIcon={faPlus}
+              rightIconAction={addSource}
+              rightIconLabel="Add source"
+              autoComplete="new-password"
+            />
+            {sources.length > 0 && (
+              <div className="flex flex-wrap gap-2 mt-2">
+                {sources.map((source, index) => (
+                  <Badge
+                    key={index}
+                    label={source}
+                    onRemove={() => removeSource(source)}
+                    variant="subtle"
+                  />
+                ))}
+              </div>
+            )}
           </div>
 
-          {/* Advanced Toggle */}
-          <button
-            onClick={() => setShowAdvanced(!showAdvanced)}
-            className="flex items-center gap-2 text-sm font-medium text-teal-600 hover:text-teal-700 transition-colors"
-          >
-            Advanced
-            <FontAwesomeIcon
-              icon={faChevronDown}
-              className={`transition-transform ${
-                showAdvanced ? "rotate-180" : ""
-              }`}
+          {/* Restricted Sources */}
+          <div className="relative">
+            <Input
+              type="text"
+              value={newRestrictedSource}
+              onChange={(e) => setNewRestrictedSource(e.target.value)}
+              placeholder="Restricted sources"
+              leftIcon={faBan}
+              onKeyDown={(e) => e.key === "Enter" && addRestrictedSource()}
+              rightIcon={faPlus}
+              rightIconAction={addRestrictedSource}
+              rightIconLabel="Add restricted source"
+              autoComplete="new-password"
             />
-          </button>
-
-          {/* Advanced Options */}
-          {showAdvanced && (
-            <div className="space-y-4 animate-fade-in">
-              {/* Brand Guidelines */}
-              <Input
-                type="text"
-                value={brandGuidelines}
-                onChange={(e) => setBrandGuidelines(e.target.value)}
-                placeholder="Brand guidelines or personality"
-                leftIcon={faUser}
-              />
-
-              {/* Sources */}
-              <div className="relative">
-                <Input
-                  type="text"
-                  value={newSource}
-                  onChange={(e) => setNewSource(e.target.value)}
-                  placeholder="Sources"
-                  leftIcon={faLink}
-                  onKeyDown={(e) => e.key === "Enter" && addSource()}
-                  rightIcon={faPlus}
-                  rightIconAction={addSource}
-                  rightIconLabel="Add source"
-                />
-                {sources.length > 0 && (
-                  <div className="flex flex-wrap gap-2 mt-2">
-                    {sources.map((source, index) => (
-                      <div
-                        key={index}
-                        className="flex items-center gap-1 bg-base-200 px-3 py-1 rounded-full"
-                      >
-                        <span>{source}</span>
-                        <button
-                          onClick={() => removeSource(source)}
-                          className="text-muted hover:text-content transition-colors"
-                          aria-label={`Remove ${source}`}
-                        >
-                          <FontAwesomeIcon icon={faTimes} size="sm" />
-                        </button>
-                      </div>
-                    ))}
-                  </div>
-                )}
+            {restrictedSources.length > 0 && (
+              <div className="flex flex-wrap gap-2 mt-2">
+                {restrictedSources.map((source, index) => (
+                  <Badge
+                    key={index}
+                    label={source}
+                    onRemove={() => removeRestrictedSource(source)}
+                    variant="destructive"
+                  />
+                ))}
               </div>
+            )}
+          </div>
 
-              {/* Restricted Sources */}
-              <div className="relative">
-                <Input
-                  type="text"
-                  value={newRestrictedSource}
-                  onChange={(e) => setNewRestrictedSource(e.target.value)}
-                  placeholder="Restricted sources"
-                  leftIcon={faBan}
-                  onKeyDown={(e) => e.key === "Enter" && addRestrictedSource()}
-                  rightIcon={faPlus}
-                  rightIconAction={addRestrictedSource}
-                  rightIconLabel="Add restricted source"
-                />
-                {restrictedSources.length > 0 && (
-                  <div className="flex flex-wrap gap-2 mt-2">
-                    {restrictedSources.map((source, index) => (
-                      <div
-                        key={index}
-                        className="flex items-center gap-1 bg-base-200 px-3 py-1 rounded-full"
-                      >
-                        <span>{source}</span>
-                        <button
-                          onClick={() => removeRestrictedSource(source)}
-                          className="text-muted hover:text-content transition-colors"
-                          aria-label={`Remove ${source}`}
-                        >
-                          <FontAwesomeIcon icon={faTimes} size="sm" />
-                        </button>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-            </div>
-          )}
+          {/* Brand Guidelines */}
+          <Input
+            type="text"
+            value={brandGuidelines}
+            onChange={(e) => setBrandGuidelines(e.target.value)}
+            placeholder="Brand guidelines or personality"
+            leftIcon={faUser}
+          />
         </div>
 
         <div className="flex flex-col gap-2 w-full">

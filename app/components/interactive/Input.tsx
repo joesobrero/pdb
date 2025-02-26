@@ -52,6 +52,10 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
       className
     );
 
+    // Icon container styles
+    const iconContainerStyles =
+      "absolute top-0 bottom-0 flex items-center justify-center w-12 h-full";
+
     return (
       <div className="w-full">
         <div
@@ -63,7 +67,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
         >
           {/* Left Icon */}
           {leftIcon && (
-            <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none">
+            <div className={cn(iconContainerStyles, "left-0")}>
               <FontAwesomeIcon icon={leftIcon} />
             </div>
           )}
@@ -83,7 +87,10 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
               type="button"
               onClick={rightIconAction}
               aria-label={rightIconLabel || "Input action"}
-              className="absolute inset-y-0 right-4 flex items-center text-muted hover:text-content cursor-pointer transition-colors"
+              className={cn(
+                iconContainerStyles,
+                "right-0 hover:text-content cursor-pointer transition-colors"
+              )}
             >
               <FontAwesomeIcon icon={rightIcon} />
             </button>
