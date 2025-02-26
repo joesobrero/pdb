@@ -29,7 +29,7 @@ const Sidebar = () => {
   const pathname = usePathname();
 
   return (
-    <nav className="w-64 h-fit rounded-xl border border-base-300 bg-base-100 shadow-sm space-y-3">
+    <nav className="w-64 h-fit rounded-xl border border-base-300 bg-base-100 space-y-3">
       {/* Main Section */}
       <div className="flex flex-col gap-2 p-3">
         <Button
