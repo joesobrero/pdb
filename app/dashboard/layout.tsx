@@ -17,9 +17,9 @@ import { usePathname } from "next/navigation";
 const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <ProtectedRoute>
-      <div className="flex min-h-screen p-8 pt-24">
+      <div className="flex min-h-screen">
         <Sidebar />
-        <main className="w-full flex flex-col gap-8 px-24">{children}</main>
+        <main className="w-full flex flex-col gap-8 p-24">{children}</main>
       </div>
     </ProtectedRoute>
   );
@@ -29,9 +29,9 @@ const Sidebar = () => {
   const pathname = usePathname();
 
   return (
-    <nav className="min-w-64 h-fit rounded-xl border border-base-300 bg-base-100 space-y-3">
+    <nav className=" min-w-64 h-screen sticky border-r border-base-300 bg-base-100 space-y-3">
       {/* Main Section */}
-      <div className="flex flex-col gap-2 p-3">
+      <div className="flex flex-col gap-2 p-3 pt-24">
         <Button
           variant="ghost"
           className={`w-full ${pathname === "/dashboard" ? "bg-base-200" : ""}`}
