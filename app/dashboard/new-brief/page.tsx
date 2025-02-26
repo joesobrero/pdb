@@ -4,7 +4,6 @@ import { cn } from "@/app/lib/utils";
 import Input from "@/app/components/interactive/input";
 import Select from "@/app/components/interactive/select";
 import {
-  faUser,
   faCalendarDays,
   faCommentDots,
   faLink,
@@ -35,7 +34,6 @@ const NewBriefPage = () => {
   const [restrictedSources, setRestrictedSources] = useState<string[]>([]);
   const [newRestrictedSource, setNewRestrictedSource] = useState("");
   const [targetAudience, setTargetAudience] = useState("");
-  const [brandGuidelines, setBrandGuidelines] = useState("");
 
   // Template prompt
   const [templatePrompt, setTemplatePrompt] = useState("");
@@ -135,9 +133,6 @@ const NewBriefPage = () => {
     const targetAudienceText = targetAudience
       ? `[${targetAudience}]`
       : "[target audience]";
-    const brandGuidelinesText = brandGuidelines
-      ? `[${brandGuidelines}]`
-      : "[brand guidelines or personality]";
     const toneText = `[${tone}]`;
     const frequencyText = `[${frequency}]`;
     const lengthText = `[${length}]`;
@@ -149,7 +144,7 @@ const NewBriefPage = () => {
         `Include relevant data or quotes from sources like ${sourcesString} and avoid sources like ${restrictedSourcesString} ` +
         `and provide clear examples, statistics, and inforgraphics where appropriate. ` +
         `Conclude with a compelling concise summary. ` +
-        `Ensure the overall content is ${lengthText} and aligns with our brand voice: ${brandGuidelinesText}`
+        `Ensure the overall content is ${lengthText}.`
     );
   }, [
     topics,
@@ -159,7 +154,6 @@ const NewBriefPage = () => {
     sources,
     restrictedSources,
     targetAudience,
-    brandGuidelines,
   ]);
 
   return (
@@ -175,7 +169,7 @@ const NewBriefPage = () => {
             type="text"
             value={briefName}
             onChange={handleNameChange}
-            placeholder="Name"
+            placeholder="Title"
             isValid={isNameValid === true}
             isInvalid={isNameValid === false}
             errorMessage={
@@ -301,15 +295,6 @@ const NewBriefPage = () => {
               </div>
             )}
           </div>
-
-          {/* Brand Guidelines */}
-          <Input
-            type="text"
-            value={brandGuidelines}
-            onChange={(e) => setBrandGuidelines(e.target.value)}
-            placeholder="Brand guidelines or personality"
-            leftIcon={faUser}
-          />
         </div>
 
         <div className="flex flex-col gap-2 w-full">
@@ -327,8 +312,10 @@ const NewBriefPage = () => {
                 <span
                   key={index}
                   className={cn(
-                    "inline",
-                    isVariable ? "text-content font-bold" : "text-muted"
+                    "inline tracking-wide",
+                    isVariable
+                      ? "text-content font-medium"
+                      : "text-muted font-light"
                   )}
                 >
                   {part}
