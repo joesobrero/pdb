@@ -39,13 +39,14 @@ const Button = ({
   ...props
 }: ButtonProps) => {
   const baseStyles = cn(
-    "rounded-full font-medium gap-3 flex flex-row items-center leading-none",
+    "rounded-lg font-medium gap-3 flex flex-row items-center leading-none",
     "transition-all duration-150",
     "hover:cursor-pointer",
-    "focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-400 disabled:opacity-50",
-    size === "sm" && "px-4 py-2 text-sm",
-    size === "md" && "px-6 py-4",
-    size === "lg" && "px-8 py-6"
+    "disabled:opacity-50 focus:outline-none",
+    "focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-teal-400",
+    size === "sm" && "px-3.5 py-2 text-sm",
+    size === "md" && "px-3.5 py-3",
+    size === "lg" && "px-5 py-4"
   );
 
   const content = (
@@ -77,10 +78,10 @@ const Button = ({
 };
 
 const variants = {
-  primary: "text-base-100 bg-content rounded-full",
-  subtle: "text-content bg-base-200 hover:bg-base-300 rounded-full",
-  outline:
-    "text-content border-base-200 border hover:border-base-300 rounded-full",
+  primary: "text-base-100 bg-content",
+  subtle: "text-content bg-base-200 hover:bg-base-300",
+  outline: "text-content border-base-200 border hover:border-base-300",
+  ghost: "text-content bg-transparent hover:bg-base-200",
 };
 
 export default Button;

@@ -1,17 +1,25 @@
-import ProtectedRoute from "@/app/components/auth/ProtectedRoute";
-import { createClient } from "@/lib/supabase/client";
+"use client";
 
-export default async function DashboardPage() {
+import { createClient } from "@/lib/supabase/client";
+import { User } from "@supabase/auth-helpers-nextjs";
+import { useEffect, useState } from "react";
+
+export default function DashboardPage() {
+  const [user, setUser] = useState<User | null>(null);
   const supabase = createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+
+  useEffect(() => {
+    const getUser = async () => {
+      const { data } = await supabase.auth.getUser();
+      setUser(data.user);
+    };
+    getUser();
+  }, [supabase.auth]);
 
   return (
-    <ProtectedRoute>
-      <div>
-        <h1>Hi {user?.email}</h1>
-      </div>
-    </ProtectedRoute>
+    <div>
+      <h1 className="text-3xl font-display font-bold">Feed</h1>
+      <p className="text-muted">account: {user?.email}</p>
+    </div>
   );
 }

@@ -24,7 +24,12 @@ export default function Hero() {
 
       <p className="text-muted">&gt;&gt; customize ai-generated newsletters</p>
 
-      <Button variant="outline" iconRight={faArrowRight} href="/sign-up">
+      <Button
+        variant="outline"
+        iconRight={faArrowRight}
+        href="/sign-up"
+        size="lg"
+      >
         Get started
       </Button>
     </div>
