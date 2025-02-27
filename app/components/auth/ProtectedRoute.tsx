@@ -19,7 +19,7 @@ export default function ProtectedRoute({ children }: ProtectedRouteProps) {
       } = await supabase.auth.getSession();
 
       if (!session) {
-        router.replace("/auth");
+        router.replace("/sign-in");
       }
     };
 
@@ -30,7 +30,7 @@ export default function ProtectedRoute({ children }: ProtectedRouteProps) {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((event, session) => {
       if (event === "SIGNED_OUT" || !session) {
-        router.replace("/auth");
+        router.replace("/sign-in");
       }
     });
 
