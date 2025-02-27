@@ -160,7 +160,7 @@ const NewBriefPage = () => {
     <>
       <h1 className="text-3xl font-display font-bold">New brief</h1>
 
-      <div className="flex flex-col md:flex-row gap-8">
+      <div className="flex flex-col lg:flex-row gap-8">
         <div className="flex flex-col gap-2 w-96">
           <h6 className="font-medium">Settings</h6>
 

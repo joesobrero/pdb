@@ -13,13 +13,21 @@ import Button from "../components/interactive/button";
 import Divider from "../components/display/divider";
 import ProtectedRoute from "../components/auth/ProtectedRoute";
 import { usePathname } from "next/navigation";
+import { cn } from "@/app/lib/utils";
 
 const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <ProtectedRoute>
       <div className="flex min-h-screen">
         <Sidebar />
-        <main className="w-full flex flex-col gap-8 p-24">{children}</main>
+        <main
+          className={cn(
+            "w-full flex flex-col gap-8 pt-24",
+            "px-6 md:px-12 lg:px-24"
+          )}
+        >
+          {children}
+        </main>
       </div>
     </ProtectedRoute>
   );
