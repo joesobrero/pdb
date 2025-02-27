@@ -114,7 +114,6 @@ export default function ResetPasswordPage() {
           <Button
             type="submit"
             disabled={loading}
-            variant="primary"
             className="w-full justify-center"
           >
             {loading ? "Updating..." : "Update Password"}
