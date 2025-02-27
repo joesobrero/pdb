@@ -68,7 +68,6 @@ export default function ForgotPasswordForm() {
           <Button
             type="submit"
             disabled={loading}
-            variant="primary"
             className="w-full justify-center"
           >
             {loading ? "Sending..." : "Send Reset Link"}

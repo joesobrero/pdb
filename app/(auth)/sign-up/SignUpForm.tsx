@@ -121,7 +121,6 @@ export default function SignUpForm() {
       <Button
         type="submit"
         disabled={loading}
-        variant="primary"
         className="w-full justify-center mt-1.5"
       >
         {loading ? "Signing up..." : "Sign Up"}

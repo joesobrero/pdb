@@ -12,9 +12,13 @@ import {
   faTags,
   faArrowsUpDown,
   faUserGroup,
+  faCheck,
+  faXmark,
+  faTrash,
 } from "@fortawesome/pro-regular-svg-icons";
 import { useState, useEffect } from "react";
 import Badge from "@/app/components/interactive/badge";
+import Button from "@/app/components/interactive/button";
 
 const NewBriefPage = () => {
   // Basic brief info
@@ -158,7 +162,18 @@ const NewBriefPage = () => {
 
   return (
     <>
-      <h1 className="text-3xl font-display font-bold">New brief</h1>
+      <div className="flex flex-row justify-between">
+        <h1 className="text-3xl font-display font-bold">New brief</h1>
+        <div className="flex flex-row gap-2">
+          <Button variant="solid" iconLeft={faCheck}>
+            Save
+          </Button>
+          <Button variant="subtle" iconLeft={faXmark}>
+            Cancel
+          </Button>
+          <Button variant="destructive" iconLeft={faTrash} />
+        </div>
+      </div>
 
       <div className="flex flex-col lg:flex-row gap-8">
         <div className="flex flex-col gap-2 w-full lg:w-96">

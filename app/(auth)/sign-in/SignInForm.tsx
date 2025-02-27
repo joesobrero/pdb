@@ -97,7 +97,6 @@ export default function SignInForm() {
 
       <Button
         type="submit"
-        variant="primary"
         disabled={loading}
         className="w-full justify-center mt-1.5"
       >

@@ -31,7 +31,7 @@ type ButtonProps = ButtonAsButton | ButtonAsLink;
 const Button = ({
   className,
   size = "md",
-  variant = "primary",
+  variant = "solid",
   iconRight,
   iconLeft,
   children,
@@ -90,11 +90,13 @@ const Button = ({
 };
 
 const variants = {
-  primary: "text-base-100 bg-content",
+  solid:
+    "text-base-100 bg-content hover:shadow-lg transition-shadow duration-150",
   subtle: "text-content bg-base-200 hover:bg-base-300",
   outline: "text-content border-base-200 border hover:border-base-300",
   ghost: "text-content bg-transparent hover:bg-base-200",
   sidebar: "text-content bg-transparent hover:bg-base-200",
+  destructive: "text-destructive bg-destructive/10 hover:bg-destructive/15",
 };
 
 export default Button;
