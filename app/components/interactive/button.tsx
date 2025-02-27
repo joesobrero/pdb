@@ -51,9 +51,21 @@ const Button = ({
 
   const content = (
     <>
-      {iconLeft && <FontAwesomeIcon icon={iconLeft} />}
-      {children}
-      {iconRight && <FontAwesomeIcon icon={iconRight} />}
+      {iconLeft && (
+        <div className="w-4 h-4 flex items-center justify-center">
+          <FontAwesomeIcon icon={iconLeft} />
+        </div>
+      )}
+      {variant === "sidebar" ? (
+        <span className="hidden md:block">{children}</span>
+      ) : (
+        children
+      )}
+      {iconRight && (
+        <div className="w-4 h-4 flex items-center justify-center">
+          <FontAwesomeIcon icon={iconRight} />
+        </div>
+      )}
     </>
   );
 
@@ -82,6 +94,7 @@ const variants = {
   subtle: "text-content bg-base-200 hover:bg-base-300",
   outline: "text-content border-base-200 border hover:border-base-300",
   ghost: "text-content bg-transparent hover:bg-base-200",
+  sidebar: "text-content bg-transparent hover:bg-base-200",
 };
 
 export default Button;
