@@ -19,8 +19,13 @@ import {
 import { useState, useEffect } from "react";
 import Badge from "@/app/components/interactive/badge";
 import Button from "@/app/components/interactive/button";
+import { useRouter } from "next/navigation";
+import { createClient } from "@/lib/supabase/client";
 
 const NewBriefPage = () => {
+  // Initialize Supabase client
+  const supabase = createClient();
+
   // Basic brief info
   const [briefName, setBriefName] = useState("");
   const [isNameValid, setIsNameValid] = useState<boolean | undefined>(
@@ -66,6 +71,10 @@ const NewBriefPage = () => {
     { value: "professional", label: "Professional" },
     { value: "authoritative", label: "Authoritative" },
   ];
+
+  const [isSaving, setIsSaving] = useState(false);
+  const [saveError, setSaveError] = useState<string | null>(null);
+  const router = useRouter();
 
   // Handle name validation
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -160,20 +169,106 @@ const NewBriefPage = () => {
     targetAudience,
   ]);
 
+  // Save the brief to the database
+  const saveBrief = async () => {
+    // Validate required fields
+    if (!briefName || briefName.length < 3) {
+      setIsNameValid(false);
+      return;
+    }
+
+    setIsSaving(true);
+    setSaveError(null);
+
+    try {
+      // Get the current user
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+
+      if (!session || !session.user) {
+        throw new Error("No user found. Please sign in again.");
+      }
+
+      // Check if user exists in the users table
+      const { data: userData, error: userError } = await supabase
+        .from("users")
+        .select("id")
+        .eq("email", session.user.email)
+        .single();
+
+      // If user doesn't exist, show error
+      if (userError || !userData) {
+        console.error("Error fetching user:", userError);
+        throw new Error(
+          "Could not find your user profile. Please contact support."
+        );
+      }
+
+      // Insert the brief into the database
+      const { error } = await supabase.from("briefs").insert({
+        user_id: userData.id,
+        name: briefName,
+        topics: topics,
+        length: length,
+        frequency: frequency,
+        tone: tone,
+        sources: sources,
+        restricted_sources: restrictedSources,
+        target_audience: targetAudience,
+      });
+
+      if (error) {
+        console.error("Database error:", error);
+        throw error;
+      }
+
+      // Navigate to the my-briefs page
+      router.push("/dashboard/my-briefs");
+    } catch (error: unknown) {
+      console.error("Error saving brief:", error);
+      setSaveError(
+        error instanceof Error ? error.message : "Failed to save brief"
+      );
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
   return (
     <>
       <div className="flex flex-row justify-between">
         <h1 className="text-3xl font-display font-bold">New brief</h1>
         <div className="flex flex-row gap-2">
-          <Button variant="solid" iconLeft={faCheck}>
-            Save
+          <Button
+            variant="solid"
+            iconLeft={faCheck}
+            onClick={saveBrief}
+            disabled={isSaving}
+          >
+            {isSaving ? "Saving..." : "Save"}
           </Button>
-          <Button variant="subtle" iconLeft={faXmark}>
+          <Button
+            variant="subtle"
+            iconLeft={faXmark}
+            onClick={() => router.push("/dashboard/my-briefs")}
+            disabled={isSaving}
+          >
             Cancel
           </Button>
-          <Button variant="destructive" iconLeft={faTrash} />
+          <Button
+            variant="destructive"
+            iconLeft={faTrash}
+            disabled={isSaving}
+          />
         </div>
       </div>
+
+      {saveError && (
+        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mt-4">
+          {saveError}
+        </div>
+      )}
 
       <div className="flex flex-col lg:flex-row gap-8">
         <div className="flex flex-col gap-2 w-full lg:w-96">
@@ -325,23 +420,24 @@ const NewBriefPage = () => {
               "min-h-[200px] whitespace-pre-line"
             )}
           >
-            {templatePrompt.split(/(\[[^\]]+\])/).map((part, index) => {
-              // Check if the part is a variable (enclosed in square brackets)
-              const isVariable = /^\[[^\]]+\]$/.test(part);
-              return (
-                <span
-                  key={index}
-                  className={cn(
-                    "inline tracking-wide",
-                    isVariable
-                      ? "text-content font-medium"
-                      : "text-muted font-light"
-                  )}
-                >
-                  {part}
-                </span>
-              );
-            })}
+            {templatePrompt &&
+              templatePrompt.split(/(\[[^\]]+\])/).map((part, index) => {
+                // Check if the part is a variable (enclosed in square brackets)
+                const isVariable = /^\[[^\]]+\]$/.test(part);
+                return (
+                  <span
+                    key={index}
+                    className={cn(
+                      "inline tracking-wide",
+                      isVariable
+                        ? "text-content font-medium"
+                        : "text-muted font-light"
+                    )}
+                  >
+                    {part}
+                  </span>
+                );
+              })}
           </div>
         </div>
       </div>
