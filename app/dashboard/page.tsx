@@ -18,7 +18,7 @@ export default function DashboardPage() {
 
   return (
     <div>
-      <h1 className="text-3xl font-display font-bold">Feed</h1>
+      <h1 className="text-3xl font-display font-medium">Feed</h1>
       <p className="text-muted">account: {user?.email}</p>
     </div>
   );

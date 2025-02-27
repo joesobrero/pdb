@@ -65,6 +65,20 @@
   .animate-fade-in {
     animation: fade-in 0.15s ease-out;
   }
+
+  .scrollbar-track-transparent {
+    /* Firefox */
+    scrollbar-color: #888 transparent;
+    scrollbar-width: thin;
+    /* WebKit */
+    &::-webkit-scrollbar {
+      width: 8px;
+    }
+    &::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+  }
 }
 
 body {

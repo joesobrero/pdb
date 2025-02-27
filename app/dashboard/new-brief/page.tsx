@@ -238,7 +238,7 @@ const NewBriefPage = () => {
   return (
     <>
       <div className="flex flex-row justify-between">
-        <h1 className="text-3xl font-display font-bold">New brief</h1>
+        <h1 className="text-3xl font-display font-medium">New brief</h1>
         <div className="flex flex-row gap-2">
           <Button
             variant="solid"
