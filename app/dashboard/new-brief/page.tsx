@@ -161,139 +161,144 @@ const NewBriefPage = () => {
       <h1 className="text-3xl font-display font-bold">New brief</h1>
 
       <div className="flex flex-col lg:flex-row gap-8">
-        <div className="flex flex-col gap-2 w-full md:w-96">
+        <div className="flex flex-col gap-2 w-full lg:w-96">
           <h6 className="font-medium">Settings</h6>
+          <div className="flex flex-col sm:flex-row lg:flex-col gap-2">
+            <div className="flex flex-col gap-2">
+              {/* Brief Name */}
+              <Input
+                type="text"
+                value={briefName}
+                onChange={handleNameChange}
+                placeholder="Title"
+                isValid={isNameValid === true}
+                isInvalid={isNameValid === false}
+                errorMessage={
+                  isNameValid === false
+                    ? "Name must be at least 3 characters"
+                    : undefined
+                }
+              />
 
-          {/* Brief Name */}
-          <Input
-            type="text"
-            value={briefName}
-            onChange={handleNameChange}
-            placeholder="Title"
-            isValid={isNameValid === true}
-            isInvalid={isNameValid === false}
-            errorMessage={
-              isNameValid === false
-                ? "Name must be at least 3 characters"
-                : undefined
-            }
-          />
+              {/* Frequency */}
+              <Select
+                value={frequency}
+                onChange={(e) => setFrequency(e.target.value)}
+                options={frequencyOptions}
+                leftIcon={faCalendarDays}
+              />
 
-          {/* Frequency */}
-          <Select
-            value={frequency}
-            onChange={(e) => setFrequency(e.target.value)}
-            options={frequencyOptions}
-            leftIcon={faCalendarDays}
-          />
+              {/* Target Audience */}
+              <Input
+                type="text"
+                value={targetAudience}
+                onChange={(e) => setTargetAudience(e.target.value)}
+                placeholder="Target audience"
+                leftIcon={faUserGroup}
+              />
 
-          {/* Target Audience */}
-          <Input
-            type="text"
-            value={targetAudience}
-            onChange={(e) => setTargetAudience(e.target.value)}
-            placeholder="Target audience"
-            leftIcon={faUserGroup}
-          />
-
-          {/* Topics */}
-          <div className="relative">
-            <Input
-              type="text"
-              value={newTopic}
-              onChange={(e) => setNewTopic(e.target.value)}
-              placeholder="Topics"
-              leftIcon={faTags}
-              onKeyDown={(e) => e.key === "Enter" && addTopic()}
-              rightIcon={faPlus}
-              rightIconAction={addTopic}
-              rightIconLabel="Add topic"
-              autoComplete="new-password"
-            />
-            {topics.length > 0 && (
-              <div className="flex flex-wrap gap-2 mt-2">
-                {topics.map((topic, index) => (
-                  <Badge
-                    key={index}
-                    label={topic}
-                    onRemove={() => removeTopic(topic)}
-                    variant="solid"
-                  />
-                ))}
+              {/* Topics */}
+              <div className="relative">
+                <Input
+                  type="text"
+                  value={newTopic}
+                  onChange={(e) => setNewTopic(e.target.value)}
+                  placeholder="Topics"
+                  leftIcon={faTags}
+                  onKeyDown={(e) => e.key === "Enter" && addTopic()}
+                  rightIcon={faPlus}
+                  rightIconAction={addTopic}
+                  rightIconLabel="Add topic"
+                  autoComplete="new-password"
+                />
+                {topics.length > 0 && (
+                  <div className="flex flex-wrap gap-2 mt-2">
+                    {topics.map((topic, index) => (
+                      <Badge
+                        key={index}
+                        label={topic}
+                        onRemove={() => removeTopic(topic)}
+                        variant="solid"
+                      />
+                    ))}
+                  </div>
+                )}
               </div>
-            )}
-          </div>
 
-          {/* Tone */}
-          <Select
-            value={tone}
-            onChange={(e) => setTone(e.target.value)}
-            options={toneOptions}
-            leftIcon={faCommentDots}
-          />
+              {/* Tone */}
+              <Select
+                value={tone}
+                onChange={(e) => setTone(e.target.value)}
+                options={toneOptions}
+                leftIcon={faCommentDots}
+              />
+            </div>
 
-          {/* Length */}
-          <Select
-            value={length}
-            onChange={(e) => setLength(e.target.value)}
-            options={lengthOptions}
-            leftIcon={faArrowsUpDown}
-          />
+            <div className="flex flex-col gap-2">
+              {/* Length */}
+              <Select
+                value={length}
+                onChange={(e) => setLength(e.target.value)}
+                options={lengthOptions}
+                leftIcon={faArrowsUpDown}
+              />
 
-          {/* Sources */}
-          <div className="relative">
-            <Input
-              type="text"
-              value={newSource}
-              onChange={(e) => setNewSource(e.target.value)}
-              placeholder="Sources"
-              leftIcon={faLink}
-              onKeyDown={(e) => e.key === "Enter" && addSource()}
-              rightIcon={faPlus}
-              rightIconAction={addSource}
-              rightIconLabel="Add source"
-              autoComplete="new-password"
-            />
-            {sources.length > 0 && (
-              <div className="flex flex-wrap gap-2 mt-2">
-                {sources.map((source, index) => (
-                  <Badge
-                    key={index}
-                    label={source}
-                    onRemove={() => removeSource(source)}
-                    variant="subtle"
-                  />
-                ))}
+              {/* Sources */}
+              <div className="relative">
+                <Input
+                  type="text"
+                  value={newSource}
+                  onChange={(e) => setNewSource(e.target.value)}
+                  placeholder="Sources"
+                  leftIcon={faLink}
+                  onKeyDown={(e) => e.key === "Enter" && addSource()}
+                  rightIcon={faPlus}
+                  rightIconAction={addSource}
+                  rightIconLabel="Add source"
+                  autoComplete="new-password"
+                />
+                {sources.length > 0 && (
+                  <div className="flex flex-wrap gap-2 mt-2">
+                    {sources.map((source, index) => (
+                      <Badge
+                        key={index}
+                        label={source}
+                        onRemove={() => removeSource(source)}
+                        variant="subtle"
+                      />
+                    ))}
+                  </div>
+                )}
               </div>
-            )}
-          </div>
 
-          {/* Restricted Sources */}
-          <div className="relative">
-            <Input
-              type="text"
-              value={newRestrictedSource}
-              onChange={(e) => setNewRestrictedSource(e.target.value)}
-              placeholder="Restricted sources"
-              leftIcon={faBan}
-              onKeyDown={(e) => e.key === "Enter" && addRestrictedSource()}
-              rightIcon={faPlus}
-              rightIconAction={addRestrictedSource}
-              rightIconLabel="Add restricted source"
-              autoComplete="new-password"
-            />
-            {restrictedSources.length > 0 && (
-              <div className="flex flex-wrap gap-2 mt-2">
-                {restrictedSources.map((source, index) => (
-                  <Badge
-                    key={index}
-                    label={source}
-                    onRemove={() => removeRestrictedSource(source)}
-                    variant="destructive"
-                  />
-                ))}
+              {/* Restricted Sources */}
+              <div className="relative">
+                <Input
+                  type="text"
+                  value={newRestrictedSource}
+                  onChange={(e) => setNewRestrictedSource(e.target.value)}
+                  placeholder="Restricted sources"
+                  leftIcon={faBan}
+                  onKeyDown={(e) => e.key === "Enter" && addRestrictedSource()}
+                  rightIcon={faPlus}
+                  rightIconAction={addRestrictedSource}
+                  rightIconLabel="Add restricted source"
+                  autoComplete="new-password"
+                />
+                {restrictedSources.length > 0 && (
+                  <div className="flex flex-wrap gap-2 mt-2">
+                    {restrictedSources.map((source, index) => (
+                      <Badge
+                        key={index}
+                        label={source}
+                        onRemove={() => removeRestrictedSource(source)}
+                        variant="destructive"
+                      />
+                    ))}
+                  </div>
+                )}
               </div>
-            )}
+            </div>
           </div>
         </div>
 
