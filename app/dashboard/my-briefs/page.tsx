@@ -77,7 +77,12 @@ const MyBriefsPage = () => {
       {briefs.length > 0 && (
         <div className="grid gap-2 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mt-4">
           {briefs.map((brief) => (
-            <BriefPreview key={brief.id} id={brief.id} name={brief.name} />
+            <BriefPreview
+              key={brief.id}
+              id={brief.id}
+              name={brief.name}
+              frequency={brief.frequency ?? "daily"}
+            />
           ))}
         </div>
       )}
