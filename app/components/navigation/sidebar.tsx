@@ -21,13 +21,13 @@ const Sidebar = () => {
   return (
     <nav
       className={cn(
-        "w-fit md:min-w-64 h-screen sticky overflow-y-auto",
+        "min-w-18 md:min-w-64 h-screen sticky overflow-y-auto debug",
         "border-r border-base-300 bg-base-100 space-y-3",
         "scrollbar-track-transparent"
       )}
     >
       {/* Main Pages */}
-      <div className="flex flex-col gap-2 p-3 pt-24 relative">
+      <div className="flex flex-col gap-2 p-3 pt-24 relative debug">
         <Link
           href="/dashboard"
           className={cn(
@@ -115,10 +115,20 @@ const Sidebar = () => {
       {/* Settings Section */}
       <div className="p-3 flex flex-col gap-2 self-end justify-self-end">
         <h3 className="mb-3 text-xs text-muted">Settings</h3>
-        <Button variant="sidebar" href="/dashboard/account" iconLeft={faUser}>
+        <Button
+          variant="sidebar"
+          href="/dashboard/account"
+          iconLeft={faUser}
+          className={pathname.includes("account") ? "bg-base-200" : ""}
+        >
           Account
         </Button>
-        <Button variant="sidebar" href="/dashboard/settings" iconLeft={faGear}>
+        <Button
+          variant="sidebar"
+          href="/dashboard/settings"
+          iconLeft={faGear}
+          className={pathname.includes("settings") ? "bg-base-200" : ""}
+        >
           Settings
         </Button>
         <Button

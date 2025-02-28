@@ -8,10 +8,11 @@ import {
 } from "drizzle-orm/pg-core";
 
 export const users = pgTable("users", {
-  id: serial("id").primaryKey(),
+  id: integer("id").primaryKey(),
   fullName: text("full_name"),
   email: text("email").notNull().unique(),
   createdAt: timestamp("created_at").defaultNow(),
+  openAIAPIKey: text("openai_api_key"),
 });
 
 export const briefs = pgTable("briefs", {

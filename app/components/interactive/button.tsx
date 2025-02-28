@@ -14,6 +14,7 @@ type BaseButtonProps = {
   iconLeft?: IconDefinition;
   children?: React.ReactNode;
   href?: string;
+  loading?: boolean;
 };
 
 type ButtonAsButton = BaseButtonProps &
@@ -36,6 +37,7 @@ const Button = ({
   iconLeft,
   children,
   href,
+  loading = false,
   ...props
 }: ButtonProps) => {
   const baseStyles = cn(
@@ -53,7 +55,11 @@ const Button = ({
     <>
       {iconLeft && (
         <div className="w-4 h-4 flex items-center justify-center">
-          <FontAwesomeIcon icon={iconLeft} />
+          {loading ? (
+            <div className="animate-spin h-4 w-4 border-2 border-current border-t-transparent rounded-full" />
+          ) : (
+            <FontAwesomeIcon icon={iconLeft} />
+          )}
         </div>
       )}
       {variant === "sidebar" ? (

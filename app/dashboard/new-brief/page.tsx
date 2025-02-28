@@ -15,13 +15,14 @@ import {
   faCheck,
   faXmark,
   faTrash,
+  faBolt,
 } from "@fortawesome/pro-regular-svg-icons";
 import { useState, useEffect } from "react";
 import Badge from "@/app/components/interactive/badge";
 import Button from "@/app/components/interactive/button";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
-
+import Brief from "@/app/components/display/brief";
 const NewBriefPage = () => {
   // Initialize Supabase client
   const supabase = createClient();
@@ -237,6 +238,7 @@ const NewBriefPage = () => {
 
   return (
     <>
+      {/*  Header */}
       <div className="flex flex-row justify-between">
         <h1 className="text-3xl font-display font-medium">New brief</h1>
         <div className="flex flex-row gap-2">
@@ -264,12 +266,14 @@ const NewBriefPage = () => {
         </div>
       </div>
 
+      {/* Error */}
       {saveError && (
         <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mt-4">
           {saveError}
         </div>
       )}
 
+      {/* Form */}
       <div className="flex flex-col lg:flex-row gap-8">
         <div className="flex flex-col gap-2 w-full lg:w-96">
           <h6 className="font-medium">Settings</h6>
@@ -440,6 +444,16 @@ const NewBriefPage = () => {
               })}
           </div>
         </div>
+      </div>
+
+      <Button iconLeft={faBolt} className="w-fit">
+        Generate preview
+      </Button>
+
+      {/* Preview */}
+      <div className="flex flex-col gap-2 w-full">
+        <h6 className="font-medium">Preview</h6>
+        <Brief />
       </div>
     </>
   );

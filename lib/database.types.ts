@@ -3,22 +3,25 @@ export type Database = {
     Tables: {
       users: {
         Row: {
-          id: string;
+          id: number;
           email: string;
           created_at: string;
-          updated_at: string;
+          full_name: string | null;
+          openai_api_key: string | null;
         };
         Insert: {
-          id?: string;
+          id?: number;
           email: string;
           created_at?: string;
-          updated_at?: string;
+          full_name?: string | null;
+          openai_api_key?: string | null;
         };
         Update: {
-          id?: string;
+          id?: number;
           email?: string;
           created_at?: string;
-          updated_at?: string;
+          full_name?: string | null;
+          openai_api_key?: string | null;
         };
       };
     };
