@@ -61,11 +61,9 @@ const Sidebar = () => {
         <Button
           variant="sidebar"
           href="/dashboard/my-briefs"
-          iconLeft={
-            pathname === "/dashboard/my-briefs" ? faFolderOpen : faFolder
-          }
+          iconLeft={pathname.includes("my-briefs") ? faFolderOpen : faFolder}
           className={`w-full ${
-            pathname === "/dashboard/my-briefs" ? "bg-base-200" : ""
+            pathname.includes("my-briefs") ? "bg-base-200" : ""
           }`}
         >
           My briefs
