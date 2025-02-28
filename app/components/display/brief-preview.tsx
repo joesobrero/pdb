@@ -23,7 +23,7 @@ const BriefPreview = ({ id, name, frequency }: BriefPreviewProps) => {
       <div
         className={cn(
           "flex flex-row gap-2 rounded-lg px-2.5 py-2 w-full items-center justify-between",
-          "bg-white/10  backdrop-blur-xl text-white"
+          "bg-base-100/10  backdrop-blur-xl text-base-100"
         )}
       >
         <h6 className="font-medium">{name}</h6>

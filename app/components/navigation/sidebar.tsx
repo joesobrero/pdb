@@ -21,13 +21,13 @@ const Sidebar = () => {
   return (
     <nav
       className={cn(
-        "min-w-18 md:min-w-64 h-screen sticky overflow-y-auto debug",
+        "min-w-17 md:min-w-64 h-screen sticky overflow-y-auto",
         "border-r border-base-300 bg-base-100 space-y-3",
         "scrollbar-track-transparent"
       )}
     >
       {/* Main Pages */}
-      <div className="flex flex-col gap-2 p-3 pt-24 relative debug">
+      <div className="flex flex-col gap-2 p-3 pt-24 relative">
         <Link
           href="/dashboard"
           className={cn(
