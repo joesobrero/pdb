@@ -1,7 +1,9 @@
 "use client";
 
+import Button from "@/app/components/interactive/button";
 import { Brief } from "@/app/types/brief";
 import { createClient } from "@/lib/supabase/client";
+import { faPencil } from "@fortawesome/pro-regular-svg-icons";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -79,7 +81,12 @@ const MyBrief = () => {
 
   return (
     <>
-      <h1 className="text-3xl font-medium font-display">{brief.name}</h1>
+      <div className="flex flex-row gap-2 justify-between">
+        <h1 className="text-3xl font-medium font-display">{brief.name}</h1>
+        <Button variant="subtle" iconLeft={faPencil}>
+          Edit
+        </Button>
+      </div>
     </>
   );
 };
