@@ -1,6 +1,5 @@
 "use client";
 
-import { cn } from "@/app/lib/utils";
 import Input from "@/app/components/interactive/input";
 import Select from "@/app/components/interactive/select";
 import {
@@ -23,17 +22,24 @@ import Button from "@/app/components/interactive/button";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import Brief from "@/app/components/display/brief";
-const NewBriefPage = () => {
-  // Initialize Supabase client
-  const supabase = createClient();
+import {
+  frequencyOptions,
+  lengthOptions,
+  toneOptions,
+} from "@/app/lib/options";
+import { generateBriefPreview } from "./generate-preview";
+import { cn } from "@/app/lib/utils";
+import toast, { Toaster } from "react-hot-toast";
 
-  // Basic brief info
+const NewBriefPage = () => {
+  const supabase = createClient();
+  const router = useRouter();
+
+  // Brief info
   const [briefName, setBriefName] = useState("");
   const [isNameValid, setIsNameValid] = useState<boolean | undefined>(
     undefined
   );
-
-  // Customization options
   const [topics, setTopics] = useState<string[]>([]);
   const [newTopic, setNewTopic] = useState("");
   const [length, setLength] = useState<string>("concise");
@@ -45,39 +51,12 @@ const NewBriefPage = () => {
   const [newRestrictedSource, setNewRestrictedSource] = useState("");
   const [targetAudience, setTargetAudience] = useState("");
 
-  // Template prompt
+  // Other state
   const [templatePrompt, setTemplatePrompt] = useState("");
-
-  // Select options
-  const frequencyOptions = [
-    { value: "daily", label: "Daily" },
-    { value: "weekly", label: "Weekly" },
-    { value: "monthly", label: "Monthly" },
-    { value: "quarterly", label: "Quarterly" },
-    { value: "yearly", label: "Yearly" },
-  ];
-
-  const lengthOptions = [
-    { value: "concise", label: "Concise" },
-    { value: "high-level", label: "High-level" },
-    { value: "detailed", label: "Detailed" },
-    { value: "comprehensive", label: "Comprehensive" },
-    { value: "exhaustive", label: "Exhaustive" },
-  ];
-
-  const toneOptions = [
-    { value: "casual", label: "Casual" },
-    { value: "friendly", label: "Friendly" },
-    { value: "neutral", label: "Neutral" },
-    { value: "professional", label: "Professional" },
-    { value: "authoritative", label: "Authoritative" },
-  ];
-
   const [isSaving, setIsSaving] = useState(false);
-  const [saveError, setSaveError] = useState<string | null>(null);
-  const router = useRouter();
+  const [generatedContent, setGeneratedContent] = useState("");
+  const [isGenerating, setIsGenerating] = useState(false);
 
-  // Handle name validation
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setBriefName(value);
@@ -90,7 +69,6 @@ const NewBriefPage = () => {
     }
   };
 
-  // Add a new topic
   const addTopic = () => {
     if (newTopic && !topics.includes(newTopic)) {
       setTopics([...topics, newTopic]);
@@ -98,12 +76,10 @@ const NewBriefPage = () => {
     }
   };
 
-  // Remove a topic
   const removeTopic = (topicToRemove: string) => {
     setTopics(topics.filter((topic) => topic !== topicToRemove));
   };
 
-  // Add a new source
   const addSource = () => {
     if (newSource && !sources.includes(newSource)) {
       setSources([...sources, newSource]);
@@ -111,12 +87,10 @@ const NewBriefPage = () => {
     }
   };
 
-  // Remove a source
   const removeSource = (sourceToRemove: string) => {
     setSources(sources.filter((source) => source !== sourceToRemove));
   };
 
-  // Add a new restricted source
   const addRestrictedSource = () => {
     if (
       newRestrictedSource &&
@@ -127,7 +101,6 @@ const NewBriefPage = () => {
     }
   };
 
-  // Remove a restricted source
   const removeRestrictedSource = (sourceToRemove: string) => {
     setRestrictedSources(
       restrictedSources.filter((source) => source !== sourceToRemove)
@@ -151,7 +124,7 @@ const NewBriefPage = () => {
     const frequencyText = `[${frequency}]`;
     const lengthText = `[${length}]`;
 
-    // Format the prompt with highlighted variables - using a single line with explicit line breaks
+    // Format the prompt with highlighted variables - using a single line
     setTemplatePrompt(
       `Write a ${frequencyText} newsletter aimed at ${targetAudienceText} that covers ${topicsString} in a ${toneText} manner. Start with a brief, engaging introduction, ` +
         `then dive into key points or sections with actionable insights and analysis. ` +
@@ -175,11 +148,18 @@ const NewBriefPage = () => {
     // Validate required fields
     if (!briefName || briefName.length < 3) {
       setIsNameValid(false);
+      toast.error("Brief name must be at least 3 characters", {
+        duration: 4000,
+        style: {
+          background: "#FEE2E2",
+          color: "#B91C1C",
+          border: "1px solid #F87171",
+        },
+      });
       return;
     }
 
     setIsSaving(true);
-    setSaveError(null);
 
     try {
       // Get the current user
@@ -224,20 +204,92 @@ const NewBriefPage = () => {
         throw error;
       }
 
+      // Show success toast
+      toast.success("Brief saved successfully!", {
+        duration: 3000,
+        style: {
+          background: "#ECFDF5",
+          color: "#065F46",
+          border: "1px solid #6EE7B7",
+        },
+      });
+
       // Navigate to the my-briefs page
       router.push("/dashboard/my-briefs");
     } catch (error: unknown) {
       console.error("Error saving brief:", error);
-      setSaveError(
-        error instanceof Error ? error.message : "Failed to save brief"
-      );
+      const errorMessage =
+        error instanceof Error ? error.message : "Failed to save brief";
+      toast.error(errorMessage, {
+        duration: 4000,
+        style: {
+          background: "#FEE2E2",
+          color: "#B91C1C",
+          border: "1px solid #F87171",
+        },
+      });
     } finally {
       setIsSaving(false);
     }
   };
 
+  const handleGeneratePreview = async () => {
+    if (!templatePrompt) {
+      toast.error("Please create a prompt template first");
+      return;
+    }
+
+    setIsGenerating(true);
+
+    try {
+      const result = await generateBriefPreview(templatePrompt);
+
+      if (result.error) {
+        toast.error(result.error, {
+          duration: 4000,
+          style: {
+            background: "#FEE2E2",
+            color: "#B91C1C",
+            border: "1px solid #F87171",
+          },
+        });
+      } else {
+        setGeneratedContent(result.content);
+        toast.success("Brief preview generated successfully!", {
+          duration: 3000,
+          style: {
+            background: "#ECFDF5",
+            color: "#065F46",
+            border: "1px solid #6EE7B7",
+          },
+        });
+      }
+    } catch (err) {
+      const errorMessage =
+        err instanceof Error ? err.message : "An error occurred";
+      toast.error(errorMessage, {
+        duration: 4000,
+        style: {
+          background: "#FEE2E2",
+          color: "#B91C1C",
+          border: "1px solid #F87171",
+        },
+      });
+    } finally {
+      setIsGenerating(false);
+    }
+  };
+
   return (
     <>
+      <Toaster
+        position="top-right"
+        toastOptions={{
+          className: "rounded-md shadow-md",
+          duration: 3000,
+        }}
+      />
+
       {/*  Header */}
       <div className="flex flex-row justify-between">
         <h1 className="text-3xl font-display font-medium">New brief</h1>
@@ -246,9 +298,9 @@ const NewBriefPage = () => {
             variant="solid"
             iconLeft={faCheck}
             onClick={saveBrief}
-            disabled={isSaving}
+            loading={isSaving}
           >
-            {isSaving ? "Saving..." : "Save"}
+            Save
           </Button>
           <Button
             variant="subtle"
@@ -265,13 +317,6 @@ const NewBriefPage = () => {
           />
         </div>
       </div>
-
-      {/* Error */}
-      {saveError && (
-        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mt-4">
-          {saveError}
-        </div>
-      )}
 
       {/* Form */}
       <div className="flex flex-col lg:flex-row gap-8">
@@ -446,14 +491,26 @@ const NewBriefPage = () => {
         </div>
       </div>
 
-      <Button iconLeft={faBolt} className="w-fit">
+      <Button
+        iconLeft={faBolt}
+        className="w-fit mt-6"
+        onClick={handleGeneratePreview}
+        loading={isGenerating}
+        disabled={!templatePrompt}
+      >
         Generate preview
       </Button>
 
       {/* Preview */}
-      <div className="flex flex-col gap-2 w-full">
+      <div className="flex flex-col gap-2 w-full mt-6">
         <h6 className="font-medium">Preview</h6>
-        <Brief />
+        <Brief
+          content={
+            isGenerating
+              ? "Generating..."
+              : generatedContent || "Your brief preview will appear here."
+          }
+        />
       </div>
     </>
   );
