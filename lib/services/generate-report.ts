@@ -1,9 +1,9 @@
 /**
- * Function to generate a brief preview using OpenAI
- * @param templatePrompt The customized prompt template based on user selections
- * @returns The generated brief content
+ * Function to generate a report using OpenAI based on brief settings
+ * @param templatePrompt The customized prompt template based on brief settings
+ * @returns The generated report content and any potential errors
  */
-export async function generateBriefPreview(
+export async function generateReport(
   templatePrompt: string
 ): Promise<{ content: string; error?: string }> {
   try {
@@ -18,8 +18,6 @@ export async function generateBriefPreview(
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        promptTemplate:
-          "You are a professional research assistant. You will create a brief based on the following instructions:",
         userMessage: templatePrompt,
       }),
     });
@@ -27,7 +25,7 @@ export async function generateBriefPreview(
     const data = await response.json();
 
     if (!response.ok) {
-      return { content: "", error: data.error || "Failed to generate brief" };
+      return { content: "", error: data.error || "Failed to generate report" };
     }
 
     // Extract the content from the response
@@ -35,7 +33,7 @@ export async function generateBriefPreview(
 
     return { content };
   } catch (error) {
-    console.error("Error generating brief preview:", error);
+    console.error("Error generating report:", error);
     return {
       content: "",
       error: error instanceof Error ? error.message : "Unknown error occurred",

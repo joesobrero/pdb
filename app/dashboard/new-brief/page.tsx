@@ -27,7 +27,7 @@ import {
   lengthOptions,
   toneOptions,
 } from "@/app/lib/options";
-import { generateBriefPreview } from "./generate-preview";
+import { generateReport } from "@/lib/services/generate-report";
 import { cn } from "@/app/lib/utils";
 import toast, { Toaster } from "react-hot-toast";
 
@@ -242,7 +242,7 @@ const NewBriefPage = () => {
     setIsGenerating(true);
 
     try {
-      const result = await generateBriefPreview(templatePrompt);
+      const result = await generateReport(templatePrompt);
 
       if (result.error) {
         toast.error(result.error, {
@@ -255,7 +255,7 @@ const NewBriefPage = () => {
         });
       } else {
         setGeneratedContent(result.content);
-        toast.success("Brief preview generated successfully!", {
+        toast.success("Report preview generated successfully!", {
           duration: 3000,
           style: {
             background: "#ECFDF5",
