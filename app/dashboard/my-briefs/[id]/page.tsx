@@ -10,6 +10,7 @@ import BriefDisplay from "@/app/components/display/brief";
 import toast, { Toaster } from "react-hot-toast";
 import { generateReport } from "@/lib/services/generate-report";
 import { saveReport } from "@/lib/services/save-report";
+import Badge from "@/app/components/interactive/badge";
 
 const MyBrief = () => {
   const params = useParams();
@@ -245,12 +246,7 @@ const MyBrief = () => {
             {brief.topics && brief.topics.length > 0 ? (
               <div className="flex flex-wrap gap-2">
                 {brief.topics.map((topic, index) => (
-                  <span
-                    key={index}
-                    className="bg-primary-100 text-primary-700 px-2 py-1 rounded-md text-sm"
-                  >
-                    {topic}
-                  </span>
+                  <Badge key={index} label={topic} variant="subtle" />
                 ))}
               </div>
             ) : (
