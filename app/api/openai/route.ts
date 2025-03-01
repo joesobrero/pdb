@@ -42,7 +42,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Parse the request body
-    const { promptTemplate, userMessage } = await request.json();
+    const { userMessage } = await request.json();
 
     if (!userMessage) {
       return NextResponse.json(
@@ -58,15 +58,18 @@ export async function POST(request: NextRequest) {
 
     // Create the chat completion
     const response = await openai.chat.completions.create({
-      model: "gpt-4o",
+      model: "gpt-4o-mini",
       messages: [
         {
           role: "system",
           content:
-            promptTemplate ||
-            `
-            You are a professional research assistant. You are given a brief and a list of sources. You will create a report on topics provided in the style of a presidential daily briefing.
-          `,
+            "You are a professional research assistant. " +
+            "You will create a brief in the style of a daily presidential repoort based on the following instructions:" +
+            "Pay close attention to the user's instructions and the content of the brief. " +
+            "Do not include any other text or commentary than the brief itself. Do not include an introduction of any kind. Get straight to the content." +
+            "Its extremely important that the brief is relevant to today's actual date, events of the past timeframe, and anticipated events of the future timeframe, where the timeframe is provided as the user message frequency." +
+            "Based on the desired frequency, length, and tone, you will create a brief that is concise and to the point. " +
+            "Avoid being generic and instead provide specific information and data to support the brief. ",
         },
         {
           role: "user",

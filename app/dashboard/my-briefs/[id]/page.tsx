@@ -8,7 +8,8 @@ import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import BriefDisplay from "@/app/components/display/brief";
 import toast, { Toaster } from "react-hot-toast";
-import { generateBriefPreview } from "../../new-brief/generate-preview";
+import { generateReport } from "@/lib/services/generate-report";
+import { saveReport } from "@/lib/services/save-report";
 
 const MyBrief = () => {
   const params = useParams();
@@ -110,8 +111,8 @@ const MyBrief = () => {
         `Conclude with a compelling concise summary. ` +
         `Ensure the overall content is ${lengthText}.`;
 
-      // Generate the brief content
-      const result = await generateBriefPreview(templatePrompt);
+      // Generate the report content
+      const result = await generateReport(templatePrompt);
 
       if (result.error) {
         toast.error(result.error, {
@@ -125,24 +126,29 @@ const MyBrief = () => {
       } else {
         setGeneratedContent(result.content);
 
-        // Update the brief in the database with the generated content
-        const { error: updateError } = await supabase
-          .from("briefs")
-          .update({ content: result.content })
-          .eq("id", briefId);
+        // Save the report using the saveReport service
+        const saveResult = await saveReport(
+          briefId,
+          result.content,
+          "You are a professional research assistant. You will create a brief based on the following instructions:",
+          templatePrompt
+        );
 
-        if (updateError) {
-          console.error("Error updating brief:", updateError);
-          toast.error("Generated content could not be saved", {
-            duration: 4000,
-            style: {
-              background: "#FEE2E2",
-              color: "#B91C1C",
-              border: "1px solid #F87171",
-            },
-          });
+        if (!saveResult.success) {
+          console.error("Error saving report:", saveResult.error);
+          toast.error(
+            saveResult.error || "Generated content could not be saved",
+            {
+              duration: 4000,
+              style: {
+                background: "#FEE2E2",
+                color: "#B91C1C",
+                border: "1px solid #F87171",
+              },
+            }
+          );
         } else {
-          toast.success("Brief generated and saved successfully!", {
+          toast.success("Report generated and saved successfully!", {
             duration: 3000,
             style: {
               background: "#ECFDF5",
